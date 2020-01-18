@@ -11,4 +11,7 @@ clean:
 	rm ELFHeaderParser
 
 run:
-	./ELFHeaderParser ./test/sample 
+	./ELFHeaderParser ./test/sample
+
+runs:
+	 ./ELFHeaderParser ./test/sample2

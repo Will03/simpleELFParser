@@ -6,6 +6,7 @@ typedef struct node{
     void* info; 
     node* next; 
 }node; 
+
 typedef struct{
     int filefd;
     int fileSize;
@@ -22,4 +23,6 @@ typedef struct firstDetectELF{
   Elf32_Half	e_machine;
 } ElfArch;
 
+bool RegisterAllHeader(ElfArch* fArch, ELFinfo* myELFinfo);
+int parseMachine(void* myfileEhdr,int is_64, char* result);
 int createJson(ELFinfo* myELFinfo);
