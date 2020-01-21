@@ -1,7 +1,19 @@
+#ifndef stdlib
+#define stdlib
+#include<stdio.h>
+#include <inttypes.h>
 #include<elf.h>
 #include <string.h>
 #include<stdio.h>
+#endif
+#ifndef dissam
+#define dissam
+#include "disassem.h"
+#endif 
+
 #include<json-c/json.h>
+
+#define MAX_BUF 256
 typedef struct node{ 
     void* info; 
     node* next; 

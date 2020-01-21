@@ -391,6 +391,69 @@ int parseDynLib(ELFinfo* myELFinfo,node* dynLibList){
     return 0;
 }
 
+int ELFtoCapstoneArch(char* arch,int is_64,cs_arch capstArch,cs_mode bitFormat ){
+
+// typedef enum ELFtoCapstone {
+// 	CS_ARCH_ARM = 0,	// ARM architecture (including Thumb, Thumb-2)
+// 	CS_ARCH_ARM64,		// ARM-64, also called AArch64
+// 	CS_ARCH_MIPS,		// Mips architecture
+// 	CS_ARCH_X86,		// X86 architecture (including x86 & x86-64)
+// 	CS_ARCH_PPC,		// PowerPC architecture
+// 	CS_ARCH_SPARC,		// Sparc architecture
+// 	CS_ARCH_SYSZ,		// SystemZ architecture
+// 	CS_ARCH_XCORE,		// XCore architecture
+// 	CS_ARCH_MAX,
+// 	CS_ARCH_ALL = 0xFFFF, // All architectures - for cs_support()
+// } cs_arch;
+    if (!memcmp(arch ,"x86",sizeof(arch))){
+        
+    }
+    else if(memcmp(arch,"x86-64",sizeof(arch))){
+
+    }
+    else if(memcmp(arch,"ARM",sizeof(arch))){
+
+    }
+    else if(memcmp(arch,"PowerPC",sizeof(arch))){
+
+    }
+    else if(memcmp(arch,"MIPS",sizeof(arch))){
+
+    }
+    else if(memcmp(arch,"Motorola m68k",sizeof(arch))){
+
+    }
+    else if(memcmp(arch,"SPARC",sizeof(arch))){
+
+    }
+    else{
+
+    }
+    return 0;
+}
+
+int dissamTextSection(ELFinfo* myELFinfo){
+    int64_t secOffset;
+    int64_t secSize;
+    if (!(findSection(myELFinfo,(char*)".dynamic",secOffset,secSize)) )
+    {
+        printf("not a dynamic link file\n");
+    }
+    uint8_t* binaddr = (uint8_t*)myELFinfo->fileBuf[secOffset];
+
+
+    char archBuf[MAX_BUF];
+    cs_arch capstArch;
+    cs_mode bitFormat;
+    parseMachine(myELFinfo->fileEhdr,myELFinfo->is_64,archBuf);
+    ELFtoCapstoneArch(archBuf,myELFinfo->is_64,capstArch,bitFormat);
+    
+    
+    dissamBinary(binaddr, secSize,capstArch, bitFormat );
+}
+
+
+
 int createJson(ELFinfo* myELFinfo)
 {
     int64_t secOffset;
@@ -401,7 +464,7 @@ int createJson(ELFinfo* myELFinfo)
     parseDynSymbol(myELFinfo,dynSymboList);
     parseDynLib(myELFinfo,dynLibList);
     printf("section offset: %x",(int)secOffset);
-    char buf[30];
+    char buf[MAX_BUF];
     
     // printf("%s",buf);
 

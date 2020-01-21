@@ -1,4 +1,5 @@
 #include"ELFHeaderParser.h"
+#include"disassem.cpp"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>

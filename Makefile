@@ -1,9 +1,9 @@
 all: ELFHeaderParser
 
 CC = g++
-CFLAGS = -ljson-c
-ELFHeaderParser: main.cpp ELFHeaderParser.cpp
-	$(CC) -o ELFHeaderParser main.cpp ELFHeaderParser.cpp $(CFLAGS)
+CFLAGS = -ljson-c -lcapstone
+ELFHeaderParser: main.cpp ELFHeaderParser.cpp dissamFunc.cpp
+	$(CC) -o ELFHeaderParser main.cpp ELFHeaderParser.cpp dissamFunc.cpp $(CFLAGS)
 
 
 .PHONY: clean,run
