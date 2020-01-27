@@ -69,6 +69,7 @@ bool RegisterAllHeader(ElfArch* fArch, ELFinfo* myELFinfo){
 }
 int parseEndian(void* myfileEhdr,int is_64, char* result)
 {
+    printf("parse endian\n");
     int endian = 0;
     if (is_64){
         endian = ((Elf64_Ehdr*)myfileEhdr)->e_ident[EI_DATA];
@@ -89,6 +90,7 @@ int parseEndian(void* myfileEhdr,int is_64, char* result)
 }
 int parseFileType(void* myfileEhdr,int is_64, char* result)
 {
+    printf("parse file type\n");
     int type = 0;
     if (is_64){
         type = ((Elf64_Ehdr*)myfileEhdr)->e_type;
@@ -107,6 +109,7 @@ int parseFileType(void* myfileEhdr,int is_64, char* result)
 
 int parseBitformat(void* myfileEhdr,int is_64, char* result)
 {
+    printf("parse bitformat\n");
     int format = 0;
     if (is_64){
         format = ((Elf64_Ehdr*)myfileEhdr)->e_ident[EI_CLASS];
@@ -128,6 +131,7 @@ int parseBitformat(void* myfileEhdr,int is_64, char* result)
 
 int parseMachine(void* myfileEhdr,int is_64, char* result)
 {
+    printf("parse machine\n");
     int machID = 0;
     if (is_64){
         machID = ((Elf64_Ehdr*)myfileEhdr)->e_machine;
@@ -187,6 +191,7 @@ int parseMachine(void* myfileEhdr,int is_64, char* result)
 
 int findSection(ELFinfo* myELFinfo,char* sName,int64_t& secOffset,int64_t& secSize)
 {
+    printf("find section\n");
     int16_t secSymbolInd;
     int64_t secNameBase;
     if (myELFinfo->is_64){
@@ -239,6 +244,8 @@ int findSection(ELFinfo* myELFinfo,char* sName,int64_t& secOffset,int64_t& secSi
     return 0;
 }
 int parseLinkType(ELFinfo* myELFinfo,char* result){
+
+    printf("parse link type");
     int64_t secOffset;
     int64_t secSize;
     int64_t stringOffset;
@@ -253,6 +260,8 @@ int parseLinkType(ELFinfo* myELFinfo,char* result){
 }
 int parseSymbol(ELFinfo* myELFinfo,node* symboList)
 {
+
+    printf("parse symbol\n");
     int64_t secOffset;
     int64_t secSize;
     int64_t stringOffset;
@@ -299,6 +308,7 @@ int parseSymbol(ELFinfo* myELFinfo,node* symboList)
 
 int parseDynSymbol(ELFinfo* myELFinfo,node* dynSymboList)
 {
+    printf("parse dynsymbol\n");
     int64_t secOffset;
     int64_t secSize;
     int64_t stringOffset;
@@ -345,6 +355,7 @@ int parseDynSymbol(ELFinfo* myELFinfo,node* dynSymboList)
     return 0;
 }
 int parseDynLib(ELFinfo* myELFinfo,node* dynLibList){
+    printf("parse dynlib\n");
     int64_t secOffset;
     int64_t secSize;
     int64_t stringOffset;
@@ -393,6 +404,7 @@ int parseDynLib(ELFinfo* myELFinfo,node* dynLibList){
 
 int ELFtoCapstoneArch(char* arch,int is_64,cs_arch& capstArch,cs_mode& bitFormat ){
 
+    printf("ELF to capstone\n");
 // typedef enum ELFtoCapstone {
 // 	CS_ARCH_ARM = 0,	// ARM architecture (including Thumb, Thumb-2)
 // 	CS_ARCH_ARM64,		// ARM-64, also called AArch64
@@ -459,6 +471,7 @@ int ELFtoCapstoneArch(char* arch,int is_64,cs_arch& capstArch,cs_mode& bitFormat
 }
 
 int disassTextSection(ELFinfo* myELFinfo,FILE *outputFp){
+    printf("diss\n");
     int64_t secOffset;
     int64_t secSize;
     if (!(findSection(myELFinfo,(char*)".text",secOffset,secSize)) )
@@ -484,6 +497,7 @@ int disassTextSection(ELFinfo* myELFinfo,FILE *outputFp){
 int createJson(ELFinfo* myELFinfo,char* resultPath)
 {
     
+    printf("create json\n");
     int64_t secOffset;
     node* symboList = (node*)malloc(sizeof(node));
     node* dynSymboList = (node*)malloc(sizeof(node));
