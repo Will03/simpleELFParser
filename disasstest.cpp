@@ -13,6 +13,7 @@ int main(void)
 	cs_insn *insn;
 	size_t count;
     uint8_t a[] = "\x55\x48\x8b\x05\xb8\x13\x00\x00";
+	printf("\n%s\n",a);
 	if (cs_open(CS_ARCH_X86, CS_MODE_64, &handle) != CS_ERR_OK)
 		return -1;
 	count = cs_disasm(handle, a, sizeof(CODE)-1, 0x1000, 0, &insn);

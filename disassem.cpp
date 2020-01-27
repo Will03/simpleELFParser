@@ -1,21 +1,21 @@
 # include"disassem.h"
 
-int dissamBinary(const uint8_t* binAddr, int size,cs_arch arch, cs_mode bitFormat )
+int disassBinary(const uint8_t* binAddr, int size,cs_arch arch, cs_mode bitFormat,FILE *outputFp )
 {
 	csh handle;
 	cs_insn *insn;
 	size_t count;
-
+	printf("\nstart disassemble\n");
     // Register a handler for define the arch
 	if (cs_open(arch, bitFormat, &handle) != CS_ERR_OK)
 		return -1;
 
     //
-	count = cs_disasm(handle,binAddr , size, 0x1000, 0, &insn);
+	count = cs_disasm(handle,binAddr , size, 0x0, 0, &insn);
 	if (count > 0) {
 		size_t j;
 		for (j = 0; j < count; j++) {
-			printf("0x%"PRIx64":\t%s\t\t%s\n", insn[j].address, insn[j].mnemonic,
+			fprintf(outputFp,"0x%"PRIx64":\t%s\t\t%s\n", insn[j].address, insn[j].mnemonic,
 					insn[j].op_str);
 		}
 

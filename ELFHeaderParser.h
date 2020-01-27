@@ -37,4 +37,5 @@ typedef struct firstDetectELF{
 
 bool RegisterAllHeader(ElfArch* fArch, ELFinfo* myELFinfo);
 int parseMachine(void* myfileEhdr,int is_64, char* result);
-int createJson(ELFinfo* myELFinfo);
+int disassTextSection(ELFinfo* myELFinfo,FILE *outputFp);
+int createJson(ELFinfo* myELFinfo,char* resultPath);

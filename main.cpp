@@ -1,5 +1,5 @@
 #include"ELFHeaderParser.h"
-#include"disassem.cpp"
+#include"disassem.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -27,8 +27,8 @@ int main(int argc, char *argv[]){
     
     ELFinfo* myELFinfo = (ELFinfo*)malloc(sizeof(ELFinfo));
     ElfArch* fArch = (ElfArch*)malloc(sizeof(ElfArch));
-    if (argc != 2){
-        printf("Usage: ELFParser [Filepath]\n");
+    if (argc != 4){
+        printf("Usage: ELFParser [FilePath] [ResultPath] [disassemblePath]\n");
         return false;
     }
     if (!readBinFile(argv[1],&myELFinfo->fileBuf, myELFinfo->fileSize)){
@@ -62,5 +62,9 @@ int main(int argc, char *argv[]){
         //     now = now->next;
         // }
     }
-    createJson(myELFinfo);
+    createJson(myELFinfo,argv[2]);
+    //char disassFileName[] = "./disassemble.txt";
+    FILE* outputFp = fopen(argv[3], "w");
+    disassTextSection(myELFinfo,outputFp);
+    fclose(outputFp);
 }

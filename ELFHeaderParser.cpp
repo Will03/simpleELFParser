@@ -391,7 +391,7 @@ int parseDynLib(ELFinfo* myELFinfo,node* dynLibList){
     return 0;
 }
 
-int ELFtoCapstoneArch(char* arch,int is_64,cs_arch capstArch,cs_mode bitFormat ){
+int ELFtoCapstoneArch(char* arch,int is_64,cs_arch& capstArch,cs_mode& bitFormat ){
 
 // typedef enum ELFtoCapstone {
 // 	CS_ARCH_ARM = 0,	// ARM architecture (including Thumb, Thumb-2)
@@ -406,40 +406,66 @@ int ELFtoCapstoneArch(char* arch,int is_64,cs_arch capstArch,cs_mode bitFormat )
 // 	CS_ARCH_ALL = 0xFFFF, // All architectures - for cs_support()
 // } cs_arch;
     if (!memcmp(arch ,"x86",sizeof(arch))){
-        
+        bitFormat =  CS_MODE_32;
+        capstArch = CS_ARCH_X86;
+        return 1;
     }
     else if(memcmp(arch,"x86-64",sizeof(arch))){
-
+        bitFormat =  CS_MODE_64;
+        capstArch = CS_ARCH_X86;
+        return 1;
     }
     else if(memcmp(arch,"ARM",sizeof(arch))){
-
+        if (is_64){
+            bitFormat =  CS_MODE_64;
+            capstArch = CS_ARCH_ARM;   
+        }
+        else{
+            bitFormat =  CS_MODE_32;
+            capstArch = CS_ARCH_ARM;
+        }
+        return 1;
     }
     else if(memcmp(arch,"PowerPC",sizeof(arch))){
-
+        bitFormat =  CS_MODE_32;
+        capstArch = CS_ARCH_PPC;
+        return 1;
     }
     else if(memcmp(arch,"MIPS",sizeof(arch))){
-
+        if (is_64){
+            bitFormat =  CS_MODE_64;
+            capstArch = CS_ARCH_MIPS;
+        }
+        else{
+            bitFormat =  CS_MODE_32;
+            capstArch = CS_ARCH_MIPS;
+        }
+        return 1;
     }
     else if(memcmp(arch,"Motorola m68k",sizeof(arch))){
-
+        bitFormat =  CS_MODE_32;
+        capstArch = CS_ARCH_ALL;
+        return 1;
     }
     else if(memcmp(arch,"SPARC",sizeof(arch))){
-
+        bitFormat =  CS_MODE_32;
+        capstArch = CS_ARCH_SPARC;
+        return 1;
     }
     else{
-
+        return 0;
     }
     return 0;
 }
 
-int dissamTextSection(ELFinfo* myELFinfo){
+int disassTextSection(ELFinfo* myELFinfo,FILE *outputFp){
     int64_t secOffset;
     int64_t secSize;
-    if (!(findSection(myELFinfo,(char*)".dynamic",secOffset,secSize)) )
+    if (!(findSection(myELFinfo,(char*)".text",secOffset,secSize)) )
     {
         printf("not a dynamic link file\n");
     }
-    uint8_t* binaddr = (uint8_t*)myELFinfo->fileBuf[secOffset];
+    uint8_t* binaddr = (uint8_t*)&(myELFinfo->fileBuf[secOffset]);
 
 
     char archBuf[MAX_BUF];
@@ -447,15 +473,17 @@ int dissamTextSection(ELFinfo* myELFinfo){
     cs_mode bitFormat;
     parseMachine(myELFinfo->fileEhdr,myELFinfo->is_64,archBuf);
     ELFtoCapstoneArch(archBuf,myELFinfo->is_64,capstArch,bitFormat);
+    printf("\n---QQQ----\n");
+    printf("%x, %x,%x,%x\n",binaddr,(int)secSize,(unsigned int)capstArch, (unsigned int)bitFormat );
     
-    
-    dissamBinary(binaddr, secSize,capstArch, bitFormat );
+    disassBinary(binaddr, secSize,capstArch, bitFormat,outputFp );
 }
 
 
 
-int createJson(ELFinfo* myELFinfo)
+int createJson(ELFinfo* myELFinfo,char* resultPath)
 {
+    
     int64_t secOffset;
     node* symboList = (node*)malloc(sizeof(node));
     node* dynSymboList = (node*)malloc(sizeof(node));
@@ -463,7 +491,6 @@ int createJson(ELFinfo* myELFinfo)
     parseSymbol(myELFinfo,symboList);
     parseDynSymbol(myELFinfo,dynSymboList);
     parseDynLib(myELFinfo,dynLibList);
-    printf("section offset: %x",(int)secOffset);
     char buf[MAX_BUF];
     
     // printf("%s",buf);
@@ -520,7 +547,6 @@ int createJson(ELFinfo* myELFinfo)
 	//add array to the base object
 	json_object_object_add(json_obj, "dynamic link library", array_obj);
 
-
-    json_object_to_file("test.json", json_obj);
+    json_object_to_file(resultPath, json_obj);
     return true;
 }
