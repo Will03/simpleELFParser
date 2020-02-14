@@ -532,7 +532,7 @@ int createJson(ELFinfo* myELFinfo,char* filePath,char* resultPath)
 
     parseBitformat(myELFinfo->fileEhdr,myELFinfo->is_64,buf);
     tmp_obj = json_object_new_string(buf);
-    json_object_object_add(json_obj, "bit-format", tmp_obj);
+    json_object_object_add(json_obj, "bit_format", tmp_obj);
 
     parseEndian(myELFinfo->fileEhdr,myELFinfo->is_64,buf);
     tmp_obj = json_object_new_string(buf);
@@ -540,7 +540,7 @@ int createJson(ELFinfo* myELFinfo,char* filePath,char* resultPath)
 
     parseLinkType(myELFinfo,buf);
     tmp_obj = json_object_new_string(buf);
-    json_object_object_add(json_obj, "link-type", tmp_obj);
+    json_object_object_add(json_obj, "link_type", tmp_obj);
 
 
     array_obj = json_object_new_array();
@@ -574,7 +574,7 @@ int createJson(ELFinfo* myELFinfo,char* filePath,char* resultPath)
             ind=ind->next;
         }
     }
-	json_object_object_add(json_obj, "dynamic link library", array_obj);
+	json_object_object_add(json_obj, "dynamic_link_library", array_obj);
 
 
 

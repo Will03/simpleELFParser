@@ -2,3 +2,5 @@
 test/
 *.json
 *.o
+
+ELFHeaderParser
